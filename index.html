@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LF Laktos Finance PRO — Gestão Pecuária</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-base: #030712;
+            --bg-card: #0f172a;
+            --accent: #10b981;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #1e293b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg-base); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
+        .hidden { display: none !important; }
+
+        /* AUTH */
+        #auth-screen { width: 100%; min-height: 100vh; background: radial-gradient(circle at top, #065f46 0%, #030712 75%); display: flex; align-items: center; justify-content: center; padding: 20px; position: absolute; top: 0; left: 0; z-index: 99999; }
+        .auth-card { background: var(--bg-card); width: 100%; max-width: 420px; padding: 25px; border-radius: 20px; border: 2px solid var(--accent); }
+        .brand-logo { font-size: 24px; font-weight: 800; color: var(--accent); text-align: center; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .brand-sub { font-size: 10px; color: var(--text-muted); text-align: center; margin-bottom: 12px; text-transform: uppercase; font-weight: 700; }
+        .badge-trial { background: rgba(16, 185, 129, 0.15); color: var(--accent); font-size: 10px; font-weight: 700; padding: 5px 10px; border-radius: 15px; text-align: center; margin: 0 auto 15px auto; display: table; border: 1px solid var(--accent); }
+
+        .auth-tabs { display: flex; gap: 6px; margin-bottom: 15px; background: var(--bg-base); padding: 4px; border-radius: 10px; border: 1px solid var(--border); }
+        .a-tab { flex: 1; padding: 10px; background: none; border: none; color: var(--text-muted); font-weight: 700; border-radius: 8px; cursor: pointer; font-size: 12px; }
+        .a-tab.active { background: var(--accent); color: #fff; }
+
+        .f-group { margin-bottom: 12px; }
+        .f-group label { display: block; font-size: 10px; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; font-weight: 700; }
+        .f-group input { width: 100%; padding: 12px; background: var(--bg-base); border: 1px solid var(--border); color: #fff; border-radius: 10px; outline: none; font-size: 13px; }
+        
+        .btn-primary { width: 100%; padding: 12px; background: var(--accent); color: #fff; border: none; border-radius: 10px; font-weight: 800; cursor: pointer; margin-top: 8px; font-size: 14px; }
+
+        .pricing-grid { margin-top: 15px; border-top: 1px solid var(--border); padding-top: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+        .p-card { background: var(--bg-base); border: 1px solid var(--border); padding: 8px; border-radius: 10px; text-align: center; cursor: pointer; }
+        .p-card.highlight { border-color: var(--accent); }
+        .p-card span { font-size: 8px; color: var(--text-muted); display: block; text-transform: uppercase; }
+        .p-card strong { font-size: 11px; color: var(--accent); display: block; margin-top: 2px; }
+
+        /* APP */
+        #app-screen { display: flex; flex-direction: column; width: 100%; min-height: 100vh; }
+        .topbar { padding: 14px 18px; background: var(--bg-card); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        .main-container { flex: 1; padding: 15px; padding-bottom: 100px; max-width: 800px; width: 100%; margin: 0 auto; }
+
+        .metrics-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px; }
+        .m-box { background: var(--bg-card); padding: 14px; border-radius: 14px; border: 1px solid var(--border); position: relative; }
+        .m-box span { font-size: 9px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; display: block; }
+        .m-box h3 { font-size: 18px; margin-top: 4px; font-weight: 800; }
+
+        .panel { background: var(--bg-card); border-radius: 14px; border: 1px solid var(--border); overflow: hidden; margin-top: 15px; }
+        .panel-header { padding: 12px 15px; border-bottom: 1px solid var(--border); font-size: 12px; font-weight: 800; color: var(--accent); }
+        .data-table { width: 100%; border-collapse: collapse; text-align: left; }
+        .data-table th, .data-table td { padding: 10px 15px; border-bottom: 1px solid var(--border); font-size: 11px; }
+        .data-table th { color: var(--text-muted); font-size: 9px; text-transform: uppercase; }
+
+        .guide-card { background: var(--bg-card); border-radius: 14px; border: 1px solid var(--border); padding: 15px; margin-top: 12px; }
+        .guide-card h4 { font-size: 13px; color: var(--accent); margin-bottom: 6px; }
+        .guide-card p, .guide-card li { font-size: 11px; color: var(--text-muted); line-height: 1.5; }
+        .guide-card ul { padding-left: 15px; margin-top: 4px; }
+
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--bg-card); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 8px 0; z-index: 1000; }
+        .nav-item { background: none; border: none; color: var(--text-muted); font-size: 9px; font-weight: 700; display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer; }
+        .nav-item i { font-size: 15px; }
+        .nav-item.active { color: var(--accent); }
+
+        #modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.8); z-index: 999999; display: flex; align-items: center; justify-content: center; padding: 15px; }
+        .modal-content { background: var(--bg-card); width: 100%; max-width: 380px; padding: 20px; border-radius: 16px; border: 1px solid var(--border); }
+    </style>
+</head>
+<body>
+
+    <!-- AUTH SCREEN -->
+    <div id="auth-screen">
+        <div class="auth-card">
+            <div class="brand-logo"><i class="fa-solid fa-cow"></i> Laktos Finance</div>
+            <div class="brand-sub">Gestão Pecuária Profissional</div>
+            <div class="badge-trial"><i class="fa-solid fa-gift"></i> 7 Dias Grátis no Cadastro</div>
+
+            <div class="auth-tabs">
+                <button type="button" id="tab-login" class="a-tab active" onclick="setAuthTab('login')">Entrar</button>
+                <button type="button" id="tab-reg" class="a-tab" onclick="setAuthTab('reg')">Criar Conta</button>
+            </div>
+
+            <div id="box-login">
+                <div class="f-group"><label>E-mail</label><input type="email" id="login-mail" value="fazenda@laktos.com"></div>
+                <div class="f-group"><label>Senha</label><input type="password" value="123456"></div>
+                <button type="button" class="btn-primary" onclick="doLogin()">Acessar Sistema</button>
+            </div>
+
+            <div id="box-reg" class="hidden">
+                <div class="f-group"><label>Nome da Fazenda</label><input type="text" id="reg-farm" value="Fazenda Boa Vista"></div>
+                <div class="f-group"><label>E-mail</label><input type="email" value="novo@laktos.com"></div>
+                <div class="f-group"><label>Senha</label><input type="password" value="123456"></div>
+                <button type="button" class="btn-primary" onclick="doRegister()">Começar Teste Grátis</button>
+            </div>
+
+            <div class="pricing-grid">
+                <div class="p-card" onclick="alert('Plano Normal Mensal selecionado!')"><span>Mensal</span><strong>R$ 29,90</strong></div>
+                <div class="p-card highlight" onclick="alert('Plano PRO MAX selecionado!')"><span>PRO MAX</span><strong>R$ 59,99</strong></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP -->
+    <div id="app-screen" class="hidden">
+        <header class="topbar">
+            <div>
+                <strong id="farm-title" style="font-size: 13px;">Fazenda</strong>
+                <span style="font-size: 9px; color: var(--accent); display: block; font-weight: 700;">PRO Ativo</span>
+            </div>
+            <button type="button" onclick="doLogout()" style="background:none; border:none; color:var(--danger); font-size:16px; cursor:pointer;"><i class="fa-solid fa-power-off"></i></button>
+        </header>
+
+        <main class="main-container">
+            <!-- DASHBOARD -->
+            <section id="sec-dash" class="app-section">
+                <div class="metrics-grid">
+                    <div class="m-box"><span>Leite Hoje</span><h3 id="m-l" style="color:var(--info);">720 L</h3></div>
+                    <div class="m-box"><span>Lucro Líquido</span><h3 id="m-p" style="color:var(--accent);">R$ 4.200</h3></div>
+                </div>
+                <div class="panel">
+                    <div class="panel-header"><i class="fa-solid fa-cow"></i> Status do Rebanho</div>
+                    <table class="data-table">
+                        <thead><tr><th>Categoria</th><th>Cabeças</th><th>Média/Dia</th></tr></thead>
+                        <tbody><tr><td>Matrizes em Lactação</td><td>45</td><td>19.2 L</td></tr></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- LEITE -->
+            <section id="sec-milk" class="app-section hidden">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <h3 style="font-size:13px;">Controle de Ordenha</h3>
+                    <button type="button" onclick="openMilkModal()" class="btn-primary" style="width:auto; padding:6px 12px; font-size:11px; margin:0;">+ Ordenha</button>
+                </div>
+                <div class="panel">
+                    <table class="data-table">
+                        <thead><tr><th>Data</th><th>Litros</th><th>Preço/L</th></tr></thead>
+                        <tbody id="tbl-milk"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- CALCULADORAS -->
+            <section id="sec-calc" class="app-section hidden">
+                <h3 style="font-size:13px; margin-bottom:10px;">Calculadora de Custo</h3>
+                <div class="panel" style="padding:15px;">
+                    <div class="f-group"><label>Gastos Totais (R$)</label><input type="number" id="c-cost" value="12000"></div>
+                    <div class="f-group"><label>Litros no Mês</label><input type="number" id="c-lit" value="10000"></div>
+                    <button type="button" onclick="calcCost()" class="btn-primary">Calcular Custo por Litro</button>
+                    <div id="c-res" style="margin-top:10px; font-size:12px; color:var(--accent); font-weight:700;"></div>
+                </div>
+            </section>
+
+            <!-- GUIAS -->
+            <section id="sec-guide" class="app-section hidden">
+                <h3 style="font-size:13px; margin-bottom:10px;">Manuais Práticos</h3>
+                <div class="guide-card">
+                    <h4><i class="fa-solid fa-sun" style="color:var(--warning);"></i> Manejo no Verão</h4>
+                    <p>Reduza o estresse térmico:</p>
+                    <ul>
+                        <li>Forneça sombra e aspersores na espera da ordenha.</li>
+                        <li>Garantir água limpa e fresca à vontade (até 150L/dia por vaca).</li>
+                    </ul>
+                </div>
+                <div class="guide-card">
+                    <h4><i class="fa-solid fa-shield-virus" style="color:var(--danger);"></i> Prevenção de Mastite</h4>
+                    <ul>
+                        <li>Execute o teste do fundo preto (caneca telada).</li>
+                        <li>Faça sempre o pré-dipping e pós-dipping corretamente.</li>
+                    </ul>
+                </div>
+                <div class="guide-card">
+                    <h4><i class="fa-solid fa-baby-carriage" style="color:var(--info);"></i> Nascimento do Bezerro</h4>
+                    <ul>
+                        <li>Cure o umbigo imediatamente com iodo a 10%.</li>
+                        <li>Garanta a ingestão de colostro nas primeiras 2 a 6 horas de vida.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- PLANOS -->
+            <section id="sec-plans" class="app-section hidden">
+                <h3 style="font-size:13px; text-align:center; margin-bottom:10px;">Planos Disponíveis</h3>
+                <div class="panel" style="padding:15px; text-align:center;">
+                    <h4>Plano PRO MAX</h4>
+                    <p style="font-size:11px; color:var(--text-muted); margin:6px 0;">Acesso completo a todos os recursos avançados.</p>
+                    <button type="button" onclick="alert('Google Play: Assinatura iniciada com 7 dias grátis!')" class="btn-primary">Ativar com 7 Dias Grátis</button>
+                </div>
+            </section>
+        </main>
+
+        <nav class="bottom-nav">
+            <button type="button" class="nav-item active" onclick="switchTab('dash', this)"><i class="fa-solid fa-house"></i><span>Início</span></button>
+            <button type="button" class="nav-item" onclick="switchTab('milk', this)"><i class="fa-solid fa-glass-water"></i><span>Leite</span></button>
+            <button type="button" class="nav-item" onclick="switchTab('calc', this)"><i class="fa-solid fa-calculator"></i><span>Calcs</span></button>
+            <button type="button" class="nav-item" onclick="switchTab('guide', this)"><i class="fa-solid fa-book-medical"></i><span>Guias</span></button>
+            <button type="button" class="nav-item" onclick="switchTab('plans', this)"><i class="fa-solid fa-gem"></i><span>Planos</span></button>
+        </nav>
+    </div>
+
+    <!-- MODAL -->
+    <div id="modal-overlay" class="hidden">
+        <div class="modal-content">
+            <h3 id="m-title" style="font-size:13px; color:var(--accent); margin-bottom:10px;">Registar</h3>
+            <div id="m-body"></div>
+            <div style="display:flex; gap:8px; margin-top:15px;">
+                <button type="button" onclick="closeModal()" class="btn-primary" style="background:#334155; margin:0;">Cancelar</button>
+                <button type="button" id="m-save" class="btn-primary" style="margin:0;">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var milkList = [{ date: "Hoje", liters: 720, price: 3.20 }];
+
+        function setAuthTab(t) {
+            document.getElementById('tab-login').classList.toggle('active', t === 'login');
+            document.getElementById('tab-reg').classList.toggle('active', t === 'reg');
+            document.getElementById('box-login').classList.toggle('hidden', t !== 'login');
+            document.getElementById('box-reg').classList.toggle('hidden', t !== 'reg');
+        }
+
+        function doLogin() {
+            var m = document.getElementById('login-mail').value || "Fazenda";
+            startApp(m.split('@')[0]);
+        }
+
+        function doRegister() {
+            var f = document.getElementById('reg-farm').value || "Fazenda";
+            startApp(f);
+        }
+
+        function startApp(name) {
+            document.getElementById('farm-title').innerText = name.toUpperCase();
+            document.getElementById('auth-screen').classList.add('hidden');
+            document.getElementById('app-screen').classList.remove('hidden');
+            renderMilk();
+        }
+
+        function doLogout() {
+            document.getElementById('auth-screen').classList.remove('hidden');
+            document.getElementById('app-screen').classList.add('hidden');
+        }
+
+        function switchTab(target, el) {
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
+            ['dash', 'milk', 'calc', 'guide', 'plans'].forEach(s => {
+                document.getElementById('sec-' + s).classList.toggle('hidden', s !== target);
+            });
+        }
+
+        function closeModal() {
+            document.getElementById('modal-overlay').classList.add('hidden');
+        }
+
+        function openMilkModal() {
+            document.getElementById('m-title').innerText = "Registar Produção";
+            document.getElementById('m-body').innerHTML = '<div class="f-group"><label>Litros</label><input type="number" id="ml-val" value="700"></div>' +
+                                                          '<div class="f-group"><label>Preço/L (R$)</label><input type="number" step="0.01" id="ml-pr" value="3.20"></div>';
+            document.getElementById('modal-overlay').classList.remove('hidden');
+            document.getElementById('m-save').onclick = function() {
+                var l = parseFloat(document.getElementById('ml-val').value);
+                var p = parseFloat(document.getElementById('ml-pr').value);
+                if(!isNaN(l)) {
+                    milkList.push({ date: "Novo", liters: l, price: p });
+                    renderMilk();
+                    closeModal();
+                }
+            };
+        }
+
+        function renderMilk() {
+            var tb = document.getElementById('tbl-milk');
+            tb.innerHTML = "";
+            milkList.forEach(i => {
+                tb.innerHTML += `<tr><td>${i.date}</td><td>${i.liters} L</td><td>R$ ${i.price.toFixed(2)}</td></tr>`;
+            });
+        }
+
+        function calcCost() {
+            var c = parseFloat(document.getElementById('c-cost').value) || 0;
+            var l = parseFloat(document.getElementById('c-lit').value) || 1;
+            var res = c / l;
+            document.getElementById('c-res').innerText = "Custo de Produção: R$ " + res.toFixed(2) + " por Litro";
+        }
+    </script>
+</body>
+</html>
